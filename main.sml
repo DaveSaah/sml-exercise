@@ -26,6 +26,11 @@ datatype family_member =
     dayOfDeath: int option       (* Day of death, None if alive *)
   }
 
+datatype node = Node of { memberId: int, name: string };
+
+fun createNode (FamilyMember { memberId, firstName, lastName, ... }) =
+    Node { memberId = memberId, name = firstName ^ " " ^ lastName };
+
 fun intOptionToString NONE = "None"
   | intOptionToString (SOME value) = Int.toString value;
 
