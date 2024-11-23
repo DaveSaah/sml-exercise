@@ -181,6 +181,37 @@ fun insert Empty newMember = TwoNode (newMember, Empty, Empty)
       end;
 
 
+(* Search function to find a FamilyMember by their memberId in the tree *)
+fun search Empty _ = NONE
+  | search (TwoNode (Node {memberId, firstName, lastName, ...}, left, right)) searchId =
+      if searchId = memberId then
+        SOME (memberId, firstName, lastName)  (* Return tuple with memberId, firstName, and lastName *)
+      else if searchId < memberId then
+        search left searchId
+      else
+        search right searchId
+  | search (ThreeNode (Node {memberId = id1, firstName = firstName1, lastName = lastName1, ...}, 
+                       Node {memberId = id2, firstName = firstName2, lastName = lastName2, ...}, left, middle, right)) searchId =
+      if searchId = id1 then
+        SOME (id1, firstName1, lastName1)  (* Return tuple for the first member *)
+      else if searchId = id2 then
+        SOME (id2, firstName2, lastName2)  (* Return tuple for the second member *)
+      else if searchId < id1 then
+        search left searchId
+      else if searchId < id2 then
+        search middle searchId
+      else
+        search right searchId;
+
+(* Helper functions to find min/max node in a TwoNode tree *)
+fun findMin (TwoNode (m, Empty, _)) = m
+  | findMin (TwoNode (_, left, _)) = findMin left
+  | findMin _ = raise Fail "Tree is not a valid two-node structure for min";
+
+fun findMax (TwoNode (m, _, Empty)) = m
+  | findMax (TwoNode (_, _, right)) = findMax right
+  | findMax _ = raise Fail "Tree is not a valid two-node structure for max";
+
 val familyTree = Empty;
 val familyTree = insert familyTree member1;
 val familyTree = insert familyTree member2;
@@ -198,6 +229,9 @@ val familyList = inOrderTraversal familyTree;
 
 (* Print the family members *)
 List.app (fn (id, first, last) => print (Int.toString id ^ " " ^ first ^ " " ^ last ^ "\n")) familyList;
+
+(* Example search for a member with memberId = 5 *)
+val searchResult = search familyTree 5;
 
 (*
 print "\n\n";
