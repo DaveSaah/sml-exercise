@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Family 2-3 Tree</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+  <style>
+    .node circle {
+      fill: #4682B4;
+      stroke: #fff;
+      stroke-width: 2px;
+    }
+    .node text {
+      font: 12px sans-serif;
+      fill: white;
+    }
+    .link {
+      fill: none;
+      stroke: #ccc;
+      stroke-width: 2px;
+    }
+    .node-label {
+      font: 12px sans-serif;
+      text-anchor: middle;
+    }
+    .node-box {
+      fill: #4682B4;
+      stroke: #fff;
+      rx: 5;
+      ry: 5;
+    }
+  </style>
+</head>
+<body>
+  <div id="tree"></div>
+  <script>
+    const familyData = {
+      "type": "2-3 tree",
+      "root": {
+        "keys": [{id: 5, name: "Michael Doe"}, {id: 8, name: "Tom Doe"}],
+        "children": [
+          {
+            "keys": [{id: 3, name: "James Doe"}],
+            "children": [
+              {
+                "keys": [{id: 1, name: "John Doe"}],
+                "children": []
+              },
+              {
+                "keys": [{id: 4, name: "Sarah Doe"}],
+                "children": []
+              }
+            ]
+          },
+          {
+            "keys": [{id: 6, name: "Emily Doe"}],
+            "children": []
+          },
+          {
+            "keys": [{id: 9, name: "Lisa Doe"}, {id: 10, name: "Emma Doe"}],
+            "children": []
+          }
+        ]
+      }
+    };
+
+    const width = 1200;
+    const height = 800;
+    const nodeWidth = 340;  // Increased to accommodate multiple keys
+    const nodeHeight = 50;
+    
+    const svg = d3.select("#tree")
+      .append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .append("g")
+      .attr("transform", `translate(${width / 2}, 60)`);
+
+    // Modified hierarchy creation to handle 2-3 tree nodes
+    const root = d3.hierarchy(familyData.root, d => d.children);
+
+    const treeLayout = d3.tree()
+      .nodeSize([nodeWidth + 20, nodeHeight * 3]);
+
+    treeLayout(root);
+
+    // Add links
+    svg.selectAll(".link")
+      .data(root.links())
+      .join("path")
+      .attr("class", "link")
+      .attr("d", d3.linkVertical()
+        .x(d => d.x)
+        .y(d => d.y));
+
+    // Create node groups
+    const node = svg.selectAll(".node")
+      .data(root.descendants())
+      .join("g")
+      .attr("class", "node")
+      .attr("transform", d => `translate(${d.x},${d.y})`);
+
+    // Add rectangles for nodes
+    node.each(function(d) {
+      const g = d3.select(this);
+      const keys = d.data.keys;
+      if (!keys || keys.length === 0) return;
+      
+      // Draw wider rectangle for nodes with multiple keys
+      g.append("rect")
+        .attr("class", "node-box")
+        .attr("x", -nodeWidth/2)
+        .attr("y", -nodeHeight/2)
+        .attr("width", nodeWidth)
+        .attr("height", nodeHeight);
+
+      // Add keys with proper spacing
+      keys.forEach((key, index) => {
+        const xOffset = (index - (keys.length - 1) / 2) * (nodeWidth / 3);
+        
+        // Add ID
+        g.append("text")
+          .attr("class", "node-label")
+          .attr("x", xOffset)
+          .attr("y", -nodeHeight/4)
+          .attr("fill", "white")
+          .text(`ID: ${key.id}`);
+
+        // Add Name
+        g.append("text")
+          .attr("class", "node-label")
+          .attr("x", xOffset)
+          .attr("y", 0)
+          .attr("fill", "white")
+          .text(key.name);
+
+        // Add ellipsis
+        g.append("text")
+          .attr("class", "node-label")
+          .attr("x", xOffset)
+          .attr("y", nodeHeight/4)
+          .attr("fill", "white")
+          .text("...");
+      });
+    });
+  </script>
+</body>
+</html>
