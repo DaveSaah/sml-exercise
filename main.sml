@@ -1,3 +1,14 @@
+(*
+PROJECT 2 - FAMILY TREE (2-3 B Tree)
+AUTHOR: GROUP 2
+MEMBERS:
+  David Saah Abeiku         
+  Akwesi Ntim Duodu         
+  Edward Ofosu Mensah       
+  Patience Nyonglema Sombang
+DATE: November 24, 2024
+*)
+
 datatype FamilyMember =
   Node of {
     memberId : int,
