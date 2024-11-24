@@ -295,6 +295,7 @@ List.app (fn (id, first, last) => print (Int.toString id ^ " " ^ first ^ " " ^ l
 
 (* Example search for a member with memberId = 5 *)
 val searchResult = search familyTree 5;
+val searchResult = search familyTree 2;
 
 (*
 print "\n\n";

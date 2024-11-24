@@ -44,34 +44,48 @@
     const familyData = {
       "type": "2-3 tree",
       "root": {
-        "keys": [{id: 5, name: "Michael Doe"}, {id: 8, name: "Tom Doe"}],
+        "keys": [{id: 2, name: "Jane Doe"}],
         "children": [
           {
-            "keys": [{id: 3, name: "James Doe"}],
+            "keys": [{id: 1, name: "Anna Doe"}],
+            "children": [],
+          },
+          {
+            "keys": [{id: 4, name: "Luke Doe"}],
             "children": [
               {
-                "keys": [{id: 1, name: "John Doe"}],
-                "children": []
+                "keys": [{id: 3, name: "Mark Doe"}],
+                "children": [],
               },
               {
-                "keys": [{id: 4, name: "Sarah Doe"}],
-                "children": []
-              }
-            ]
+                "keys": [{id: 6, name: "James Doe"}],
+                "children": [
+                  {
+                    "keys": [{id: 5, name: "Linda Doe"}],
+                    "children": [],
+                  },
+                  {
+                    "keys": [{id: 8, name: "Benjamin Doe"}],
+                    "children": [
+                      {
+                        "keys": [{id: 7, name: "Sophia Doe"}],
+                        "children": [],
+                      },
+                      {
+                        "keys": [{id: 9, name: "Daniel Doe"}, {id: 10, name: "Emma Doe"}],
+                        "children": [],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
           },
-          {
-            "keys": [{id: 6, name: "Emily Doe"}],
-            "children": []
-          },
-          {
-            "keys": [{id: 9, name: "Lisa Doe"}, {id: 10, name: "Emma Doe"}],
-            "children": []
-          }
-        ]
+        ],
       }
     };
 
-    const width = 1300;
+    const width = 2000;
     const height = 1300;
     const nodeWidth = 340;  // Increased to accommodate multiple keys
     const nodeHeight = 50;
