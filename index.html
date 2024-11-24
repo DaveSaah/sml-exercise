@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,19 +12,23 @@
       stroke: #fff;
       stroke-width: 2px;
     }
+
     .node text {
       font: 12px sans-serif;
       fill: white;
     }
+
     .link {
       fill: none;
       stroke: #ccc;
       stroke-width: 2px;
     }
+
     .node-label {
       font: 12px sans-serif;
       text-anchor: middle;
     }
+
     .node-box {
       fill: #4682B4;
       stroke: #fff;
@@ -32,6 +37,7 @@
     }
   </style>
 </head>
+
 <body>
   <div id="tree"></div>
   <script>
@@ -65,11 +71,11 @@
       }
     };
 
-    const width = 1200;
-    const height = 800;
+    const width = 1300;
+    const height = 1300;
     const nodeWidth = 340;  // Increased to accommodate multiple keys
     const nodeHeight = 50;
-    
+
     const svg = d3.select("#tree")
       .append("svg")
       .attr("width", width)
@@ -102,28 +108,28 @@
       .attr("transform", d => `translate(${d.x},${d.y})`);
 
     // Add rectangles for nodes
-    node.each(function(d) {
+    node.each(function (d) {
       const g = d3.select(this);
       const keys = d.data.keys;
       if (!keys || keys.length === 0) return;
-      
+
       // Draw wider rectangle for nodes with multiple keys
       g.append("rect")
         .attr("class", "node-box")
-        .attr("x", -nodeWidth/2)
-        .attr("y", -nodeHeight/2)
+        .attr("x", -nodeWidth / 2)
+        .attr("y", -nodeHeight / 2)
         .attr("width", nodeWidth)
         .attr("height", nodeHeight);
 
       // Add keys with proper spacing
       keys.forEach((key, index) => {
         const xOffset = (index - (keys.length - 1) / 2) * (nodeWidth / 3);
-        
+
         // Add ID
         g.append("text")
           .attr("class", "node-label")
           .attr("x", xOffset)
-          .attr("y", -nodeHeight/4)
+          .attr("y", -nodeHeight / 4)
           .attr("fill", "white")
           .text(`ID: ${key.id}`);
 
@@ -139,11 +145,12 @@
         g.append("text")
           .attr("class", "node-label")
           .attr("x", xOffset)
-          .attr("y", nodeHeight/4)
+          .attr("y", nodeHeight / 4)
           .attr("fill", "white")
           .text("...");
       });
     });
   </script>
 </body>
+
 </html>

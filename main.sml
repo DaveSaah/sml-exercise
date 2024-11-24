@@ -203,14 +203,75 @@ fun search Empty _ = NONE
       else
         search right searchId;
 
-(* Helper functions to find min/max node in a TwoNode tree *)
+fun getMemberId (Node {memberId, ...}) = memberId;
+
 fun findMin (TwoNode (m, Empty, _)) = m
   | findMin (TwoNode (_, left, _)) = findMin left
   | findMin _ = raise Fail "Tree is not a valid two-node structure for min";
 
-fun findMax (TwoNode (m, _, Empty)) = m
-  | findMax (TwoNode (_, _, right)) = findMax right
-  | findMax _ = raise Fail "Tree is not a valid two-node structure for max";
+(* Function to delete a node from the binary tree *)
+fun delete Empty _ = Empty
+  | delete (TwoNode (node, left, right)) memberIdToDelete =
+      let
+        val Node {memberId, ...} = node
+      in
+        if memberIdToDelete = memberId then
+          (* Case 1: No children or one child *)
+          if left = Empty then right
+          else if right = Empty then left
+          else
+            (* Case 2: Two children - find the in-order successor and delete it *)
+            let
+              val minNode = findMin right
+              val rightWithoutMin = delete right (getMemberId minNode) (* Delete the min node from the right subtree *)
+            in
+              TwoNode (minNode, left, rightWithoutMin)
+            end
+        else if memberIdToDelete < memberId then
+          TwoNode (node, delete left memberIdToDelete, right)
+        else
+          TwoNode (node, left, delete right memberIdToDelete)
+      end
+  | delete (ThreeNode (node1, node2, left, middle, right)) memberIdToDelete =
+      let
+        val Node {memberId = id1, ...} = node1
+        val Node {memberId = id2, ...} = node2
+      in
+        if memberIdToDelete = id1 then
+          (* Case 1: No children or one child for node1 *)
+          if left = Empty then
+            (* node1 has no left child, so replace it with right or middle subtree *)
+            if right = Empty then middle else right
+          else if middle = Empty then
+            (* node1 has no middle child, replace it with left or right *)
+            left
+          else
+            (* Case 2: node1 has two children - find in-order successor *)
+            let
+              val minNode = findMin middle
+              val middleWithoutMin = delete middle (getMemberId minNode)
+            in
+              ThreeNode (minNode, node2, left, middleWithoutMin, right)
+            end
+        else if memberIdToDelete = id2 then
+          (* Case 2: Same logic as above for node2 in ThreeNode *)
+          if middle = Empty then
+            if right = Empty then left
+            else right
+          else
+            let
+              val minNode = findMin right
+              val rightWithoutMin = delete right (getMemberId minNode)
+            in
+              ThreeNode (node1, minNode, left, middle, rightWithoutMin)
+            end
+        else if memberIdToDelete < id1 then
+          ThreeNode (node1, node2, delete left memberIdToDelete, middle, right)
+        else if memberIdToDelete < id2 then
+          ThreeNode (node1, node2, left, delete middle memberIdToDelete, right)
+        else
+          ThreeNode (node1, node2, left, middle, delete right memberIdToDelete)
+      end;
 
 val familyTree = Empty;
 val familyTree = insert familyTree member1;
@@ -224,6 +285,8 @@ val familyTree = insert familyTree member8;
 val familyTree = insert familyTree member9;
 val familyTree = insert familyTree member10;
 
+val familyTree = delete familyTree 5;
+
 (* Traverse the tree *)
 val familyList = inOrderTraversal familyTree;
 
@@ -236,4 +299,53 @@ val searchResult = search familyTree 5;
 (*
 print "\n\n";
 print (FamilyMemberToString member2);
+*)
+
+(* 
+(* Define a function to generate a JSON representation of a 2-3 tree *)
+fun treeToJson Empty = "{ \"keys\": [], \"children\": [] }"
+  | treeToJson (TwoNode (member, left, right)) = 
+      let
+        val Node {memberId = id, title, firstName, lastName, ...} = member
+        val nodeName = title ^ " " ^ firstName ^ " " ^ lastName
+        val leftJson = treeToJson left
+        val rightJson = treeToJson right
+      in
+        "{ \"keys\": [ { \"id\": " ^ Int.toString id ^ 
+        ", \"name\": \"" ^ nodeName ^ "\" } ], " ^
+        "\"children\": [ " ^ leftJson ^ ", " ^ rightJson ^ " ] }"
+      end
+  | treeToJson (ThreeNode (member_1, member_2, left, middle, right)) = 
+      let
+        val Node {memberId = id1, title = t1, firstName = f1, lastName = l1, ...} = member_1
+        val Node {memberId = id2, title = t2, firstName = f2, lastName = l2, ...} = member_2
+        val nodeName1 = t1 ^ " " ^ f1 ^ " " ^ l1
+        val nodeName2 = t2 ^ " " ^ f2 ^ " " ^ l2
+        val leftJson = treeToJson left
+        val middleJson = treeToJson middle
+        val rightJson = treeToJson right
+      in
+        "{ \"keys\": [ " ^
+        "{ \"id\": " ^ Int.toString id1 ^ ", \"name\": \"" ^ nodeName1 ^ "\" }, " ^
+        "{ \"id\": " ^ Int.toString id2 ^ ", \"name\": \"" ^ nodeName2 ^ "\" } ], " ^
+        "\"children\": [ " ^ leftJson ^ ", " ^ middleJson ^ ", " ^ rightJson ^ " ] }"
+      end;
+
+(* Wrap the JSON tree with the root node structure *)
+fun treeToRootJson tree = 
+    "{ \"type\": \"2-3 tree\", " ^
+    "\"root\": " ^ treeToJson tree ^ " }";
+
+(* Function to save JSON to a file *)
+fun saveJsonToFile (filename, jsonOutput) =
+    let
+        val outStream = TextIO.openOut filename
+    in
+        TextIO.output (outStream, jsonOutput);
+        TextIO.closeOut outStream
+    end;
+
+(* Convert a tree to JSON and save it *)
+val jsonOutput = treeToRootJson familyTree;
+val _ = saveJsonToFile ("tree_output.json", jsonOutput);
 *)
