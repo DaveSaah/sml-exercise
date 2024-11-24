@@ -111,3 +111,51 @@ datatype colour = red | blue | green;
 - `map` -> apply function on each element.
 - To read program from text file into repl: `use "file.sml";`
 - To print a string to stdout: `print "Hello";`
+
+## How To Run Program
+
+### SML
+
+```bash
+sml main.sml
+```
+
+- The tests will show their outputs.
+- You can also use the functions to insert, search, traverse and delete family
+  members in the family tree.
+
+### UI
+
+- Open `index.html` in your browser to see initial family tree (2-3 B tree).
+
+### Functions Usage
+
+- Insertion
+
+```sml
+insert familyTree familyMember;
+```
+
+- Deletion
+
+```sml
+delete familyTree memberID;
+```
+
+- Traversal
+
+```sml
+inOrderTraversal familyTree;
+```
+
+- Searching
+
+```sml
+search familyTree memberID;
+```
+
+- Display
+
+```sml
+FamilyMemberToString familyMember;
+```
