@@ -25,7 +25,7 @@
     }
 
     .node-label {
-      font: 12px sans-serif;
+      font: 14px sans-serif;
       text-anchor: middle;
     }
 
@@ -44,40 +44,35 @@
     const familyData = {
       "type": "2-3 tree",
       "root": {
-        "keys": [{id: 2, name: "Jane Doe"}],
+        "keys": [{id: 4, name: "Luke Doe"}],
         "children": [
           {
-            "keys": [{id: 1, name: "Anna Doe"}],
-            "children": [],
-          },
-          {
-            "keys": [{id: 4, name: "Luke Doe"}],
+            "keys": [{id: 2, name: "Jane Doe"}],
             "children": [
+              {
+                "keys": [{id: 1, name: "Anna Doe"}],
+                "children": [],
+              },
               {
                 "keys": [{id: 3, name: "Mark Doe"}],
                 "children": [],
               },
+            ],
+          },
+          {
+            "keys": [{id: 6, name: "James Doe"}, {id: 8, name: "Benjamin Doe"}],
+            "children": [
               {
-                "keys": [{id: 6, name: "James Doe"}],
-                "children": [
-                  {
-                    "keys": [{id: 5, name: "Linda Doe"}],
-                    "children": [],
-                  },
-                  {
-                    "keys": [{id: 8, name: "Benjamin Doe"}],
-                    "children": [
-                      {
-                        "keys": [{id: 7, name: "Sophia Doe"}],
-                        "children": [],
-                      },
-                      {
-                        "keys": [{id: 9, name: "Daniel Doe"}, {id: 10, name: "Emma Doe"}],
-                        "children": [],
-                      },
-                    ],
-                  },
-                ],
+                "keys": [{id: 5, name: "Linda Doe"}],
+                "children": [],
+              },
+              {
+                "keys": [{id: 7, name: "Sophia Doe"}],
+                "children": [],
+              },
+              {
+                "keys": [{id: 9, name: "Daniel Doe"}, {id: 10, name: "Emma Doe"}],
+                "children": [],
               },
             ],
           },
@@ -85,10 +80,10 @@
       }
     };
 
-    const width = 2000;
-    const height = 1300;
-    const nodeWidth = 340;  // Increased to accommodate multiple keys
-    const nodeHeight = 50;
+    const width = 1880;
+    const height = 800;
+    const nodeWidth = 230;  // Increased to accommodate multiple keys
+    const nodeHeight = 60;
 
     const svg = d3.select("#tree")
       .append("svg")
